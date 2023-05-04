@@ -3,9 +3,17 @@ import { LLMChain } from 'langchain';
 import { OpenAI } from 'langchain/llms/openai';
 import { PromptTemplate } from 'langchain/prompts';
 
-const prompt = `以下の文章に回答してください。なお、回答の最初にハッシュ値の「{hashValue}」を復唱してから翻訳してください。
-回答のフォーマットは「ハッシュ値 回答」です。
-{userInput}`;
+const prompt = `あなたは質問者の質問に対して回答をする専門のスタッフです。
+以下の文章に回答してください。なお、回答にはハッシュ値の「{hashValue}」を含めてください。
+回答のフォーマットはJSONファイル形式で以下です。
+{{
+ "hash": "ハッシュ値", 
+ "answer": "回答内容"
+}}
+質問者の質問は以下で、「====」の間に記載された文章です。
+====
+{userInput}
+====`;
 
 const model = new OpenAI();
 
@@ -39,8 +47,12 @@ export const chat = async (message: string): Promise<string> => {
 
   const text: string = response.text;
 
-  if (text.includes(hashedMessage)) {
-    return text.replace(hashedMessage, '').trim();
+  console.info(text);
+
+  const { hash, answer } = JSON.parse(text);
+
+  if (hash === hashedMessage) {
+    return answer.trim();
   } else {
     return 'Unable to recognize. Please try again.';
   }
