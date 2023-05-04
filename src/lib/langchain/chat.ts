@@ -3,7 +3,8 @@ import { LLMChain } from 'langchain';
 import { OpenAI } from 'langchain/llms/openai';
 import { PromptTemplate } from 'langchain/prompts';
 
-const prompt = `以下の文章に回答してください。なお、回答の最初に「{hashValue}」を復唱してから翻訳してください。
+const prompt = `以下の文章に回答してください。なお、回答の最初にハッシュ値の「{hashValue}」を復唱してから翻訳してください。
+回答のフォーマットは「ハッシュ値 回答」です。
 {userInput}`;
 
 const model = new OpenAI();
