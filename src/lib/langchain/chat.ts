@@ -38,9 +38,6 @@ export const chat = async (message: string): Promise<string> => {
 
   const text: string = response.text;
 
-  console.info('text:', text);
-  console.info('hash:', hashedMessage);
-
   if (text.includes(hashedMessage)) {
     return text.replace(hashedMessage, '').trim();
   } else {
